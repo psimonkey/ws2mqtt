@@ -44,7 +44,7 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity("WS2MQTT Test devices", "test_devices", false);
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test devices", (char*)"test_devices", false);
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic) {
@@ -191,10 +191,10 @@ void sendMQTTState(uint32_t device_id, char* short_name, bool state) {
 }
 
 void sendMQTTDeviceState(device_state_t ds) {
-	sendMQTTState(ds.device_id, "generic_error", ds.generic_error);
-	sendMQTTState(ds.device_id, "docked", ds.docked);
-	sendMQTTState(ds.device_id, "sensor_battery", ds.sensor_battery);
-	sendMQTTState(ds.device_id, "radio_module_battery", ds.radio_module_battery);
+	sendMQTTState(ds.device_id, (char*)"generic_error", ds.generic_error);
+	sendMQTTState(ds.device_id, (char*)"docked", ds.docked);
+	sendMQTTState(ds.device_id, (char*)"sensor_battery", ds.sensor_battery);
+	sendMQTTState(ds.device_id, (char*)"radio_module_battery", ds.radio_module_battery);
 }
 
 void announceMQTTButtonEvent(device_t device) {
