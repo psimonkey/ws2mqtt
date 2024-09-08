@@ -44,7 +44,8 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test devices", (char*)"test_devices", false);
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test devices", (char*)"test_devices", false); //Test Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Mute all devices", (char*)"mute_devices", false); //Mute Button
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic) {
