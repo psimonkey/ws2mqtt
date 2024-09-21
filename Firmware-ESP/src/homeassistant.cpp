@@ -44,11 +44,11 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false); //Test Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false); //Silence Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false, true); //Test Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false, false); //Silence Button
 }
 
-void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic) {
+void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled) {
 	StaticJsonDocument<500> doc;
 
 	char avtytopic[200];
@@ -61,6 +61,8 @@ void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic) 
 	doc["name"] = name;
 	if (diagnostic)
 		doc["entity_category"] = "diagnostic";
+	if (!enabled)
+		doc['en'] = false;
 	char cmdtopic[200];
 	sprintf(cmdtopic, "ws2mqtt/bridge_%08x/command", DEVICE_ID);
 	doc["cmd_t"] = cmdtopic;
