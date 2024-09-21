@@ -62,7 +62,7 @@ void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, 
 	if (diagnostic)
 		doc["entity_category"] = "diagnostic";
 	if (!enabled)
-		doc['en'] = false;
+		doc["en"] = false;
 	char cmdtopic[200];
 	sprintf(cmdtopic, "ws2mqtt/bridge_%08x/command", DEVICE_ID);
 	doc["cmd_t"] = cmdtopic;
