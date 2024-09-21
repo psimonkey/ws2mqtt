@@ -64,6 +64,16 @@ typedef struct {
 	uint8_t stop;
 } pkt_tx_event_button_t;
 
+// Outgoing silence smoke message  {0x61, 0x000000, 0x80, 0x01, 0x7E};
+const uint8_t SPI_TX_SILENCE_SMOKE_BUTTON = 0x61;
+typedef struct {
+	uint8_t cmd;
+	uint32_t device_id:24;
+	uint8_t device_type;
+	uint8_t _unknown;
+	uint8_t stop;
+} pkt_tx_silence_smoke_button_t;
+
 const uint8_t SPI_RX_ERROR = 0x71;
 typedef struct {
 	uint8_t cmd;

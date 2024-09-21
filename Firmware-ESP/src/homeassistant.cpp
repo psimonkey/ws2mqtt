@@ -44,8 +44,8 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test devices", (char*)"test_devices", false); //Test Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Mute all devices", (char*)"mute_devices", false); //Mute Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false); //Test Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false); //Silence Button
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic) {
@@ -249,7 +249,8 @@ void removeMQTTBinarySensor(device_t device, char* short_name) {
 		sprintf(topic, HA_AUTODISCOVERY_PREFIX"/binary_sensor/ws2mqtt_%d/%s/config", device.device_id, short_name);
 		Serial.println(topic);
 		mqttClient.publish(topic, NULL, true);
-	}
+	} 
+	
 }
 
 void removeMQTTButtonEvent(device_t device) {
@@ -261,8 +262,13 @@ void removeMQTTButtonEvent(device_t device) {
 }
 
 void handleMQTTCommand(char* command) {
-	if (strncmp(command, "test_devices", 12) == 0)
+	if (strncmp(command, "test_devices", 12) == 0) {
 		sendTestButtonMsg();
+	} else if (strncmp(command, "silence_smoke", 15) == 0)
+	{
+		sendSilenceSmokeButtonMsg();
+	}
+
 }
 
 char* modelString(uint16_t model_id) {

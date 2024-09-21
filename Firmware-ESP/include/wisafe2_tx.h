@@ -15,6 +15,7 @@ void enqueueSPIMessage(uint8_t* msg);
 
 void sendWelcomeMsg();
 void sendTestButtonMsg();
+void sendSilenceSmokeButtonMsg();
 void sendDiagnosticRequest();
 void sendQuerySIDMap();
 void sendQueryDiagnosticDetails(uint8_t sid, uint8_t subsubtype);
