@@ -12,7 +12,7 @@ void publishAllCachedDeviceStates();
 
 void announceMQTTBridge();
 void announceMQTTBridgeEntities();
-void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled);
+void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled, char* icon);
 
 void addBridgeDescription(JsonObject dev);
 void sendMQTTBridgeEvent();
