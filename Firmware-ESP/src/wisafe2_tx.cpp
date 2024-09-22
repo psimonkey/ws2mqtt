@@ -58,15 +58,15 @@ void sendTestButtonMsg() {
 	handleTX((uint8_t*)&pkt, sizeof(pkt));
 }
 
-void sendSilenceSmokeButtonMsg() {
+void sendSilenceButtonMsg(uint8_t device_type) {
 	Serial.printf("Sending silence smoke message\n");
 
-	pkt_tx_silence_smoke_button_t pkt;
+	pkt_tx_silence_button_t pkt;
 	memset(&pkt, 0, sizeof(pkt));
 
-	pkt.cmd = SPI_TX_SILENCE_SMOKE_BUTTON;
+	pkt.cmd = SPI_TX_SILENCE_BUTTON;
 	pkt.device_id = DEVICE_ID;
-	pkt.device_type = DEVICE_TYPE_SMOKE;
+	pkt.device_type = device_type;
 	pkt._unknown = 0x01;
 	pkt.stop = SPI_STOP_WORD;
 
