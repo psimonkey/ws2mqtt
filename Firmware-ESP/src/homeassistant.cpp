@@ -46,7 +46,7 @@ void announceMQTTBridge() {
 void announceMQTTBridgeEntities() {
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false, true, (char*)"mdi:bell-cog"); //Test Button
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false, false, (char*)"mdi:bell-sleep"); //Silence Smoke Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence CO Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled, char* icon) {
