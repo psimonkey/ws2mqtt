@@ -44,7 +44,10 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false, true, (char*)"mdi:bell-cog"); //Test Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false, true, (char*)"mdi:bell-cog"); //Test All Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test Smoke Devices", (char*)"test_smoke", false, false, (char*)"mdi:bell-cog"); //Test Smoke Button
+	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test CO Devices", (char*)"test_co", false, false, (char*)"mdi:bell-cog"); //Test CO Button
+
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false, false, (char*)"mdi:bell-sleep"); //Silence Smoke Button
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence CO Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
 }
@@ -267,12 +270,18 @@ void removeMQTTButtonEvent(device_t device) {
 
 void handleMQTTCommand(char* command) {
 	if (strncmp(command, "test_devices", 12) == 0) {
-		sendTestButtonMsg();
-	} else if (strncmp(command, "silence_smoke", 15) == 0)
-	{
+		sendTestButtonMsg(DEVICE_TYPE_ALL);
+	} 
+	else if (strncmp(command, "test_smoke", 10) == 0) { 
+		sendTestButtonMsg(DEVICE_TYPE_SMOKE);
+	} 
+	else if (strncmp(command, "test_co", 7) == 0) { 
+		sendTestButtonMsg(DEVICE_TYPE_CO);
+	} 
+	else if (strncmp(command, "silence_smoke", 15) == 0) {
 		sendSilenceButtonMsg(DEVICE_TYPE_SMOKE);
-	} else if (strncmp(command, "silence_co", 10) == 0)
-	{
+	} 
+	else if (strncmp(command, "silence_co", 10) == 0) {
 		sendSilenceButtonMsg(DEVICE_TYPE_CO);
 	}
 

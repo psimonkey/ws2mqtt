@@ -14,7 +14,7 @@ void handleTX(uint8_t* msg, int length);
 void enqueueSPIMessage(uint8_t* msg);
 
 void sendWelcomeMsg();
-void sendTestButtonMsg();
+void sendTestButtonMsg(uint8_t device_type);
 void sendSilenceButtonMsg(uint8_t device_type);
 void sendDiagnosticRequest();
 void sendQuerySIDMap();

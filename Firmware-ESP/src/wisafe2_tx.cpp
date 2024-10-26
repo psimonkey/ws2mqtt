@@ -42,7 +42,7 @@ void sendWelcomeMsg() {
 	handleTX((uint8_t*)&pkt, sizeof(pkt));
 }
 
-void sendTestButtonMsg() {
+void sendTestButtonMsg(uint8_t device_type) {
 	Serial.printf("Sending test button message\n");
 
 	pkt_tx_event_button_t pkt;
@@ -50,7 +50,7 @@ void sendTestButtonMsg() {
 
 	pkt.cmd = SPI_TX_EVENT_BUTTON;
 	pkt.device_id = DEVICE_ID;
-	pkt.device_type = DEVICE_TYPE_ALL;
+	pkt.device_type = device_type;
 	pkt._unknown = 0x01;
 	pkt.model = 0x047C;
 	pkt.stop = SPI_STOP_WORD;
