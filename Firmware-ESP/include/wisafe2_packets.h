@@ -54,6 +54,9 @@ typedef struct {
 } pkt_rx_event_button_t;
 
 // Outgoing test message
+// smoke {0x70, 0x000000, 0x81, 0x01, 0x0000, 0x7E};
+// co    {0x70, 0x000000, 0x41, 0x01, 0x0000, 0x7E};
+// all   {0x70, 0x000000, 0xFF, 0x01, 0x0000, 0x7E};
 const uint8_t SPI_TX_EVENT_BUTTON = 0x70;
 typedef struct {
 	uint8_t cmd;
@@ -76,6 +79,12 @@ typedef struct {
 	uint8_t stop;
 } pkt_tx_silence_button_t;
 
+// Outgoing emergency message
+// smoke {0x50, 0x000000, 0x81, 0x00, 0x7E};
+// co    {0x50, 0x000000, 0x41, 0x00, 0x7E};
+
+
+// Receive error
 const uint8_t SPI_RX_ERROR = 0x71;
 typedef struct {
 	uint8_t cmd;
