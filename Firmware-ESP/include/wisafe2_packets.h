@@ -82,7 +82,14 @@ typedef struct {
 // Outgoing emergency message
 // smoke {0x50, 0x000000, 0x81, 0x00, 0x7E};
 // co    {0x50, 0x000000, 0x41, 0x00, 0x7E};
-
+const uint8_t SPI_TX_EMERGENCY_BUTTON = 0x50;
+typedef struct {
+	uint8_t cmd;
+	uint32_t device_id:24;
+	uint8_t device_type;
+	uint8_t _unknown;
+	uint8_t stop;
+} pkt_tx_emergency_button_t;
 
 // Receive error
 const uint8_t SPI_RX_ERROR = 0x71;
