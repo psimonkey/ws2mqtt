@@ -9,6 +9,9 @@ unsigned long lastReconnectAttempt = 0;
 void setupWifi() {
 	Serial.println("Connecting to Wifi");
 
+	char host[32];
+	sprintf(host, "ws2mqtt_%08x", DEVICE_ID);
+	WiFi.setHostname(host);
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(WIFI_SSID, WIFI_PSK);
 
