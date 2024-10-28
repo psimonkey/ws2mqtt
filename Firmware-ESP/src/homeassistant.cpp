@@ -6,6 +6,8 @@
 
 extern PubSubClient mqttClient;
 
+unsigned long lastSensorPush = 0;
+
 void announceAllDevices() {
 	announceMQTTBridge();
 	announceMQTTBridgeEntities();
@@ -53,6 +55,11 @@ void announceMQTTBridgeEntities() {
 
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Emergency Smoke", (char*)"emergency_smoke", false, false, (char*)"mdi:bell-sleep"); //Emergency Smoke Button
 	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Emergency CO", (char*)"emergency_co", false, false, (char*)"mdi:bell-sleep"); //Emergency CO Button
+
+	announceMQTTBridgeSensorEntity((char*)"WS2MQTT IP Address", (char*)"ip_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:ip-network"); //IP Address Sensor
+	announceMQTTBridgeSensorEntity((char*)"WS2MQTT RSSI", (char*)"rssi", (char*)"signal_strength", (char*)"dBm", true, true, (char*)"mdi:wifi"); //Wifi RSSI
+	announceMQTTBridgeSensorEntity((char*)"WS2MQTT MAC Address", (char*)"mac_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi Mac Address
+	announceMQTTBridgeSensorEntity((char*)"WS2MQTT SSID", (char*)"ssid", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi SSID
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled, char* icon) {
@@ -91,6 +98,47 @@ void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, 
 	}
 }
 
+// remove init_value
+void announceMQTTBridgeSensorEntity(char* name, char* sensor, char* dev_class, char* unit, bool diagnostic, bool enabled, char* icon) {
+	StaticJsonDocument<500> doc;
+
+	char avtytopic[200];
+	sprintf(avtytopic, "ws2mqtt/bridge_%08x/state", DEVICE_ID);
+	doc["avty_t"] = avtytopic;
+
+	JsonObject dev = doc.createNestedObject("dev");
+	addBridgeDescription(dev);
+
+	doc["name"] = name;
+	if (diagnostic)
+		doc["entity_category"] = "diagnostic";
+	if (!enabled)
+		doc["en"] = false;
+	doc["icon"] = icon;
+	if (dev_class!="None")
+		doc["dev_cla"] = dev_class;
+	if (unit!="None")
+		doc["unit_of_meas"] = unit;
+	char stattopic[200];
+	sprintf(stattopic, "ws2mqtt/bridge_%08x/%s", DEVICE_ID, sensor);
+	doc["stat_t"] = stattopic;
+
+	char uniq_id[128];
+	sprintf(uniq_id, "ws2mqtt_bridge_sensor_%s", sensor);
+	doc["uniq_id"] = uniq_id;
+
+	char msg[500];
+	serializeJson(doc, msg, 500);
+
+	if (mqttClient.connected()) {
+		char topic[200];
+		sprintf(topic, HA_AUTODISCOVERY_PREFIX"/sensor/ws2mqtt_bridge_%08x/%s/config", DEVICE_ID, sensor);
+		Serial.println(topic);
+		mqttClient.publish(topic, msg, true);
+	}
+
+}
+
 void addBridgeDescription(JsonObject dev) {
 	char devid[32];
 	sprintf(devid, "ws2mqtt_bridge_%08x", DEVICE_ID);
@@ -108,6 +156,42 @@ void sendMQTTBridgeEvent() {
 	sprintf(eventtopic, "ws2mqtt/bridge_%08x/event", DEVICE_ID);
 	if (mqttClient.connected())
 		mqttClient.publish(eventtopic, "alarm");
+}
+
+void loopBridgeSensors () {
+	
+	if (millis() - lastSensorPush > BRIDGE_SENSOR_INTERVAL) {
+		// IP Address
+		sendMQTTBridgeSensor((char*)"ip_addr", (char*)WiFi.localIP().toString().c_str());
+
+		// RSSI
+		char rssi[5];
+		sprintf(rssi, "%d", (int)WiFi.RSSI());
+		sendMQTTBridgeSensor((char*)"rssi", (char*)rssi);
+
+		// MAC Address
+		byte mac[6]; 
+		WiFi.macAddress(mac);
+		char mac_char[20];
+		sprintf(mac_char, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+		sendMQTTBridgeSensor((char*)"mac_addr", (char*)mac_char);
+
+		// SSID
+		sendMQTTBridgeSensor((char*)"ssid", (char*)WiFi.SSID().c_str());
+
+		lastSensorPush = millis();
+	}
+}
+
+void sendMQTTBridgeSensor (char* sensor, char* sensor_value) {
+
+	if (mqttClient.connected()) {
+		
+		char init_topic[200];
+		sprintf(init_topic, "ws2mqtt/bridge_%08x/%s", DEVICE_ID, sensor);
+		Serial.println(init_topic);
+		mqttClient.publish(init_topic, sensor_value, true);
+	}
 }
 
 void announceMQTTDevice(device_t device) {

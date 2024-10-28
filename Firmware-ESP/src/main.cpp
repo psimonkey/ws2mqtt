@@ -37,6 +37,8 @@ void loop() {
 	receiveSPIMessage(&handleRX);
 	loopMQTT();
 	
+	loopBridgeSensors();
+
 	loopOTA();
 
 	loopUpdateSIDMap();
