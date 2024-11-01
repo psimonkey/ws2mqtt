@@ -46,20 +46,28 @@ void announceMQTTBridge() {
 }
 
 void announceMQTTBridgeEntities() {
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test All Devices", (char*)"test_devices", false, true, (char*)"mdi:bell-cog"); //Test All Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test Smoke Devices", (char*)"test_smoke", false, false, (char*)"mdi:bell-cog"); //Test Smoke Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Test CO Devices", (char*)"test_co", false, false, (char*)"mdi:bell-cog"); //Test CO Button
+	// Test
+	announceMQTTBridgeButtonEntity((char*)"Test All Devices", (char*)"test_devices", false, true, (char*)"mdi:bell-cog"); //Test All Button
+	announceMQTTBridgeButtonEntity((char*)"Test Smoke Devices", (char*)"test_smoke", false, false, (char*)"mdi:bell-cog"); //Test Smoke Button
+	announceMQTTBridgeButtonEntity((char*)"Test CO Devices", (char*)"test_co", false, false, (char*)"mdi:bell-cog"); //Test CO Button
 
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence Smoke Devices", (char*)"silence_smoke", false, false, (char*)"mdi:bell-sleep"); //Silence Smoke Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Silence CO Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
+	// Silence
+	announceMQTTBridgeButtonEntity((char*)"Silence Smoke Devices", (char*)"silence_smoke", false, false, (char*)"mdi:bell-sleep"); //Silence Smoke Button
+	announceMQTTBridgeButtonEntity((char*)"Silence CO Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
 
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Emergency Smoke", (char*)"emergency_smoke", false, false, (char*)"mdi:bell-sleep"); //Emergency Smoke Button
-	announceMQTTBridgeButtonEntity((char*)"WS2MQTT Emergency CO", (char*)"emergency_co", false, false, (char*)"mdi:bell-sleep"); //Emergency CO Button
+	// Emergency
+	announceMQTTBridgeButtonEntity((char*)"Emergency Smoke", (char*)"emergency_smoke", false, false, (char*)"mdi:bell-sleep"); //Emergency Smoke Button
+	announceMQTTBridgeButtonEntity((char*)"Emergency CO", (char*)"emergency_co", false, false, (char*)"mdi:bell-sleep"); //Emergency CO Button
 
-	announceMQTTBridgeSensorEntity((char*)"WS2MQTT IP Address", (char*)"ip_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:ip-network"); //IP Address Sensor
-	announceMQTTBridgeSensorEntity((char*)"WS2MQTT RSSI", (char*)"rssi", (char*)"signal_strength", (char*)"dBm", true, true, (char*)"mdi:wifi"); //Wifi RSSI
-	announceMQTTBridgeSensorEntity((char*)"WS2MQTT MAC Address", (char*)"mac_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi Mac Address
-	announceMQTTBridgeSensorEntity((char*)"WS2MQTT SSID", (char*)"ssid", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi SSID
+	// WiFi Sensors
+	announceMQTTBridgeSensorEntity((char*)"IP Address", (char*)"ip_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:ip-network"); //IP Address Sensor
+	announceMQTTBridgeSensorEntity((char*)"RSSI", (char*)"rssi", (char*)"signal_strength", (char*)"dBm", true, true, (char*)"mdi:wifi"); //Wifi RSSI
+	announceMQTTBridgeSensorEntity((char*)"MAC Address", (char*)"mac_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi Mac Address
+	announceMQTTBridgeSensorEntity((char*)"SSID", (char*)"ssid", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi SSID
+
+	// Restart
+	announceMQTTBridgeButtonEntity((char*)"ESP Restart", (char*)"esp_restart", false, false, (char*)"mdi:restart"); // Restart Button
+	announceMQTTBridgeSensorEntity((char*)"Uptime", (char*)"esp_uptime", (char*)"duration", (char*)"s", true, false, (char*)"mdi:clock"); // Time since last restart
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled, char* icon) {
@@ -178,6 +186,11 @@ void loopBridgeSensors () {
 
 		// SSID
 		sendMQTTBridgeSensor((char*)"ssid", (char*)WiFi.SSID().c_str());
+
+		// Uptime
+		char uptime[5];
+		sprintf(uptime, "%d", esp_timer_get_time()/1000000);
+		sendMQTTBridgeSensor((char*)"esp_uptime", (char*)uptime);
 
 		lastSensorPush = millis();
 	}
@@ -376,6 +389,9 @@ void handleMQTTCommand(char* command) {
 	}
 	else if (strncmp(command, "emergency_co", 12) == 0) {
 		sendEmergencyButtonMsg(DEVICE_TYPE_CO);
+	}
+	else if (strncmp(command, "esp_restart", 11) ==0) {
+		ESP.restart();
 	}
 
 }
