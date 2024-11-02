@@ -43,11 +43,15 @@ boolean reconnectMQTT() {
 
 	sprintf(avtytopic, "ws2mqtt/bridge_%08x/state", DEVICE_ID);
 	sprintf(cmdtopic, "ws2mqtt/bridge_%08x/command", DEVICE_ID);
+
+
 	if (mqttClient.connect("ws2mqtt", MQTT_USERNAME, MQTT_PASSWORD, avtytopic, 0, true, "offline")) {
 		Serial.println("connected");
 
 		mqttClient.publish(avtytopic, "online", true);
 		mqttClient.subscribe(cmdtopic);
+		mqttClient.subscribe("homeassistant/status");
+
 		announceAllDevices();
 		publishAllCachedDeviceStates();
 	} else {
@@ -64,10 +68,16 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
 	memcpy(payloadChar, payload, length);
 	sprintf(cmdtopic, "ws2mqtt/bridge_%08x/command", DEVICE_ID);
-	if (strncmp(topic, cmdtopic, length) == 0) {
+
+	if (strncmp(topic, cmdtopic, length) == 0) { // If the callback is for the command topic
 		Serial.printf("Command received: %s\n", payloadChar);
 		handleMQTTCommand(payloadChar);
 	}
+	else if (strncmp(topic, "homeassistant/status", length) == 0) { // If the callback is for the Home Assistant status topic
+		announceAllDevices();
+		publishAllCachedDeviceStates();
+	}
+
 }
 
 void loopMQTT() {
