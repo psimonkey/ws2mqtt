@@ -67,7 +67,11 @@ void announceMQTTBridgeEntities() {
 
 	// Restart
 	announceMQTTBridgeButtonEntity((char*)"ESP Restart", (char*)"esp_restart", false, false, (char*)"mdi:restart"); // Restart Button
-	announceMQTTBridgeSensorEntity((char*)"Uptime", (char*)"esp_uptime", (char*)"duration", (char*)"s", true, false, (char*)"mdi:clock"); // Time since last restart
+	announceMQTTBridgeSensorEntity((char*)"ESP Uptime", (char*)"esp_uptime", (char*)"duration", (char*)"s", true, false, (char*)"mdi:clock"); // Time since last restart
+	announceMQTTBridgeSensorEntity((char*)"ESP Restart Reason", (char*)"esp_reset_reason", (char*)"None", (char*)"None", true, false, (char*)"mdi:restart-alert");
+
+	// ESP Info
+	announceMQTTBridgeSensorEntity((char*)"ESP Model", (char*)"esp_model", (char*)"None", (char*)"None", true, false, (char*)"mdi:chip"); // ESP Chip Model
 }
 
 void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, bool enabled, char* icon) {
@@ -191,6 +195,44 @@ void loopBridgeSensors () {
 		char uptime[5];
 		sprintf(uptime, "%d", esp_timer_get_time()/1000000);
 		sendMQTTBridgeSensor((char*)"esp_uptime", (char*)uptime);
+
+		esp_reset_reason_t reason = esp_reset_reason();
+		char reason_str[20];
+		switch (reason)
+		{
+		case ESP_RST_POWERON:
+			sprintf(reason_str, "%s", "Power On");
+			break;
+		case ESP_RST_SW:
+			sprintf(reason_str, "%s", "Software");
+			break;
+		case ESP_RST_PANIC:
+			sprintf(reason_str, "%s", "Exception/Panic");
+			break;
+		case ESP_RST_INT_WDT:
+			sprintf(reason_str, "%s", "Interupt Watchdog");
+			break;
+		case ESP_RST_TASK_WDT:
+			sprintf(reason_str, "%s", "Task Watchdog");
+			break;
+		case ESP_RST_WDT:
+			sprintf(reason_str, "%s", "Other Watchdog");
+			break;
+		case ESP_RST_DEEPSLEEP:
+			sprintf(reason_str, "%s", "Exit Deep Sleep");
+			break;
+		case ESP_RST_BROWNOUT:
+			sprintf(reason_str, "%s", "Brownout");
+			break;
+		
+		default:
+			sprintf(reason_str, "%s", "Uknown");
+			break;
+		}
+		sendMQTTBridgeSensor((char*)"esp_reset_reason", (char*)reason_str);
+
+		// ESP Chip
+		sendMQTTBridgeSensor((char*)"esp_model", (char*)ESP.getChipModel());
 
 		lastSensorPush = millis();
 	}
