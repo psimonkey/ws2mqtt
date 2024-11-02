@@ -110,7 +110,6 @@ void announceMQTTBridgeButtonEntity(char* name, char* command, bool diagnostic, 
 	}
 }
 
-// remove init_value
 void announceMQTTBridgeSensorEntity(char* name, char* sensor, char* dev_class, char* unit, bool diagnostic, bool enabled, char* icon) {
 	StaticJsonDocument<500> doc;
 
@@ -172,7 +171,7 @@ void sendMQTTBridgeEvent() {
 
 void loopBridgeSensors () {
 	
-	if (millis() - lastSensorPush > BRIDGE_SENSOR_INTERVAL) {
+	if (millis() - lastSensorPush > BRIDGE_SENSOR_INTERVAL * 1000) {
 		// IP Address
 		sendMQTTBridgeSensor((char*)"ip_addr", (char*)WiFi.localIP().toString().c_str());
 

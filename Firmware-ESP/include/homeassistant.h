@@ -7,7 +7,7 @@
 
 #define HA_AUTODISCOVERY_PREFIX "homeassistant"
 
-#define BRIDGE_SENSOR_INTERVAL 10000 // milliseconds between sending bridge sensor updates
+#define BRIDGE_SENSOR_INTERVAL 10 // seconds between sending bridge sensor updates
 
 void announceAllDevices();
 void publishAllCachedDeviceStates();
