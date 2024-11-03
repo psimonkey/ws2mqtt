@@ -70,6 +70,7 @@ typedef struct {
 // Outgoing silence message  
 // smoke {0x61, 0x000000, 0x80, 0x01, 0x7E};
 // co    {0x61, 0x000000, 0x40, 0x01, 0x7E};
+#ifdef ENABLE_SILENCE_ALARM
 const uint8_t SPI_TX_SILENCE_BUTTON = 0x61;
 typedef struct {
 	uint8_t cmd;
@@ -78,10 +79,12 @@ typedef struct {
 	uint8_t _unknown;
 	uint8_t stop;
 } pkt_tx_silence_button_t;
+#endif
 
 // Outgoing emergency message
 // smoke {0x50, 0x000000, 0x81, 0x00, 0x7E};
 // co    {0x50, 0x000000, 0x41, 0x00, 0x7E};
+#ifdef ENABLE_TRIGGER_ALARM
 const uint8_t SPI_TX_EMERGENCY_BUTTON = 0x50;
 typedef struct {
 	uint8_t cmd;
@@ -90,6 +93,7 @@ typedef struct {
 	uint8_t _unknown;
 	uint8_t stop;
 } pkt_tx_emergency_button_t;
+#endif
 
 // Receive error
 const uint8_t SPI_RX_ERROR = 0x71;
