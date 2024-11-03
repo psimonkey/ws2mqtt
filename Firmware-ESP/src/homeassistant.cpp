@@ -52,12 +52,16 @@ void announceMQTTBridgeEntities() {
 	announceMQTTBridgeButtonEntity((char*)"Test CO Devices", (char*)"test_co", false, false, (char*)"mdi:bell-cog"); //Test CO Button
 
 	// Silence
+#ifdef ENABLE_SILENCE_ALARM
 	announceMQTTBridgeButtonEntity((char*)"Silence Smoke Devices", (char*)"silence_smoke", false, false, (char*)"mdi:bell-sleep"); //Silence Smoke Button
 	announceMQTTBridgeButtonEntity((char*)"Silence CO Devices", (char*)"silence_co", false, false, (char*)"mdi:bell-sleep"); //Silence CO Button
+#endif
 
 	// Emergency
+#ifdef ENABLE_TRIGGER_ALARM
 	announceMQTTBridgeButtonEntity((char*)"Emergency Smoke", (char*)"emergency_smoke", false, false, (char*)"mdi:bell-sleep"); //Emergency Smoke Button
 	announceMQTTBridgeButtonEntity((char*)"Emergency CO", (char*)"emergency_co", false, false, (char*)"mdi:bell-sleep"); //Emergency CO Button
+#endif
 
 	// WiFi Sensors
 	announceMQTTBridgeSensorEntity((char*)"IP Address", (char*)"ip_addr", (char*)"None", (char*)"None", true, true, (char*)"mdi:ip-network"); //IP Address Sensor
@@ -66,7 +70,7 @@ void announceMQTTBridgeEntities() {
 	announceMQTTBridgeSensorEntity((char*)"SSID", (char*)"ssid", (char*)"None", (char*)"None", true, true, (char*)"mdi:wifi"); //Wifi SSID
 
 	// Restart
-	announceMQTTBridgeButtonEntity((char*)"ESP Restart", (char*)"esp_restart", false, false, (char*)"mdi:restart"); // Restart Button
+	announceMQTTBridgeButtonEntity((char*)"ESP Restart", (char*)"esp_restart", true, false, (char*)"mdi:restart"); // Restart Button
 	announceMQTTBridgeSensorEntity((char*)"ESP Uptime", (char*)"esp_uptime", (char*)"duration", (char*)"s", true, false, (char*)"mdi:clock"); // Time since last restart
 	announceMQTTBridgeSensorEntity((char*)"ESP Restart Reason", (char*)"esp_reset_reason", (char*)"None", (char*)"None", true, false, (char*)"mdi:restart-alert");
 
@@ -419,18 +423,22 @@ void handleMQTTCommand(char* command) {
 	else if (strncmp(command, "test_co", 7) == 0) { 
 		sendTestButtonMsg(DEVICE_TYPE_CO);
 	} 
+#ifdef ENABLE_SILENCE_ALARM
 	else if (strncmp(command, "silence_smoke", 13) == 0) {
 		sendSilenceButtonMsg(DEVICE_TYPE_SMOKE);
 	} 
 	else if (strncmp(command, "silence_co", 10) == 0) {
 		sendSilenceButtonMsg(DEVICE_TYPE_CO);
 	}
+#endif
+#ifdef ENABLE_TRIGGER_ALARM
 	else if (strncmp(command, "emergency_smoke", 15) == 0) {
 		sendEmergencyButtonMsg(DEVICE_TYPE_SMOKE);
 	}
 	else if (strncmp(command, "emergency_co", 12) == 0) {
 		sendEmergencyButtonMsg(DEVICE_TYPE_CO);
 	}
+#endif
 	else if (strncmp(command, "esp_restart", 11) ==0) {
 		ESP.restart();
 	}
