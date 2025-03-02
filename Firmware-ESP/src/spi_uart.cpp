@@ -13,8 +13,8 @@ int uartrxbufPos = 0;
 int uartrxbufExpectedLength = 0;
 
 void setupSPI() {
-	Serial2.setRxBufferSize(1024);
-	Serial2.begin(19200, SERIAL_8N1, 16, 17);
+	Serial1.setRxBufferSize(1024);
+	Serial1.begin(19200, SERIAL_8N1, 1, 0);
 }
 
 void sendSPIMessage(uint8_t* msg) {
@@ -26,14 +26,14 @@ void sendSPIMessage(uint8_t* msg) {
 }
 
 void sendSPIMessage(uint8_t* msg, int length) {
-	Serial2.write("}");
-	Serial2.write(length);
-	Serial2.write(msg, length);
+	Serial1.write("}");
+	Serial1.write(length);
+	Serial1.write(msg, length);
 }
 
 void receiveSPIMessage(void (*rxCallback)(uint8_t*, int)) {
-	while(Serial2.available()) {
-		char c = Serial2.read();
+	while(Serial1.available()) {
+		char c = Serial1.read();
 #ifdef DEBUG_SERIAL
 		if (binModeActivated)
 			// Do not spam console with binary data
@@ -69,6 +69,6 @@ void receiveSPIMessage(void (*rxCallback)(uint8_t*, int)) {
 
 #ifdef DEBUG_SERIAL
 	if(Serial.available())
-		Serial2.print((char)Serial.read());
+		Serial1.print((char)Serial.read());
 #endif
 }

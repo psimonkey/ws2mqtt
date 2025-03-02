@@ -9,9 +9,12 @@
 #define QUERY_NEW_DEVICES_INTERVAL 60 // seconds
 
 // Enables the ability to silence the alarm from Home Assistant. Comment out the below line to disable.
-//#define ENABLE_SILENCE_ALARM
+#define ENABLE_SILENCE_ALARM
 
 // Enables the ability to trigger an alarm from Home Assistant. Comment out the below line to disable.
-//#define ENABLE_TRIGGER_ALARM
+#define ENABLE_TRIGGER_ALARM
+
+// Enable OTA update
+// #define ENABLE_OTA
 
 #endif

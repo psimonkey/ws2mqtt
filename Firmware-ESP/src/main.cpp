@@ -18,7 +18,9 @@ void setup() {
 	setupSPI();
 	setupWifi();
 	setupMQTT();
+#ifdef ENABLE_OTA
 	setupOTA();
+#endif
 
 	sendDiagnosticRequest();
 	sendQuerySIDMap();
@@ -39,7 +41,9 @@ void loop() {
 	
 	loopBridgeSensors();
 
+#ifdef ENABLE_OTA
 	loopOTA();
+#endif
 
 	loopUpdateSIDMap();
 	loopTX();

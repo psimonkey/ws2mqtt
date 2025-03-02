@@ -229,7 +229,7 @@ void loopBridgeSensors () {
 			break;
 		
 		default:
-			sprintf(reason_str, "%s", "Uknown");
+			sprintf(reason_str, "%s", "Unknown");
 			break;
 		}
 		sendMQTTBridgeSensor((char*)"esp_reset_reason", (char*)reason_str);

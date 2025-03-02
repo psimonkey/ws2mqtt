@@ -6,7 +6,10 @@
 #include <PubSubClient.h>
 #include "credentials.h"
 #include "homeassistant.h"
-#include <ArduinoOTA.h>
+
+#ifdef ENABLE_OTA
+    #include <ArduinoOTA.h>
+#endif
 
 boolean reconnectMQTT();
 void mqttCallback(char* topic, byte* payload, unsigned int length);
@@ -15,7 +18,9 @@ void loopMQTT();
 
 void setupWifi();
 
-void setupOTA();
-void loopOTA();
+#ifdef ENABLE_OTA
+    void setupOTA();
+    void loopOTA();
+#endif
 
 #endif

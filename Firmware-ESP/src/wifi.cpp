@@ -95,14 +95,16 @@ void loopMQTT() {
 		mqttClient.loop();
 }
 
-void setupOTA() {
-	// OTA Configiration and Enable OTA
-	Serial.println("Enabling OTA Feature");
-	ArduinoOTA.setPassword(OTA_PASSWORD);
-	ArduinoOTA.begin();
-}
+#ifdef ENABLE_OTA
+	void setupOTA() {
+		// OTA Configiration and Enable OTA
+		Serial.println("Enabling OTA Feature");
+		ArduinoOTA.setPassword(OTA_PASSWORD);
+		ArduinoOTA.begin();
+	}
 
-void loopOTA() {
-	// OTA Handle
-  	ArduinoOTA.handle();
-}
+	void loopOTA() {
+		// OTA Handle
+		ArduinoOTA.handle();
+	}
+#endif
